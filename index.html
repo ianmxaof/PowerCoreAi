@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>PowerCoreAi</title>
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      background-color: #000000;
+      color: #ffffff;
+      margin: 0;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 2rem;
+      position: relative;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    #bg-video {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      object-fit: cover;
+      z-index: 999999;
+      opacity: 0.4;
+      background-color: #000000;
+    }
+    .content-wrapper {
+      position: relative;
+      z-index: 1000000;
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      background-color: transparent;
+    }
+    h1 {
+      font-size: 3.25rem;
+      margin: 0;
+      text-align: left;
+    }
+    .title-powercore {
+      font-size: 4.25rem;
+      display: inline-block;
+      font-weight: 700;
+    }
+    .title-ai {
+      font-size: 3.25rem;
+      display: inline-block;
+      font-weight: 200;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      letter-spacing: -1px;
+    }
+    .subheader {
+      font-size: 1.2rem;
+      opacity: 0.85;
+      margin-bottom: 1rem;
+      margin-left: 1rem;
+    }
+    .quote {
+      font-style: italic;
+      font-size: 1rem;
+      opacity: 0.9;
+      max-width: 400px;
+      text-align: left;
+      min-height: 3em;
+      transition: opacity 0.5s ease;
+      margin-left: 0;
+      width: fit-content;
+      white-space: normal;
+      word-wrap: break-word;
+    }
+    .carousel-container {
+      position: relative;
+      width: 100%;
+      max-width: 800px;
+      overflow: hidden;
+    }
+    .plans {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 1.5rem;
+      position: fixed;
+      right: 2rem;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 1000000;
+    }
+    .plan {
+      min-width: 250px;
+      background-color: transparent;
+      padding: 1rem 1.5rem;
+      border-radius: 10px;
+      border: 1px solid #ffa500;
+      cursor: pointer;
+      position: relative;
+      text-align: center;
+      transition: background-color 0.3s ease;
+      text-decoration: none;
+      color: #ffffff;
+      margin-left: auto;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .plan:hover {
+      background-color: rgba(255, 165, 0, 0.2);
+      border-color: #ffa500;
+      text-decoration: none;
+    }
+    .plan a {
+      color: #ffffff;
+      text-decoration: none;
+    }
+    .plan a:hover {
+      text-decoration: none;
+    }
+    .tooltip {
+      position: absolute;
+      right: 110%;
+      top: 0;
+      transform: none;
+      background: rgba(0, 0, 0, 0.9);
+      color: #fff;
+      padding: 0.8rem 1rem;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      width: 320px;
+      text-align: left;
+      opacity: 0;
+      visibility: hidden;
+      transition: 0.3s ease;
+      border: 1px solid #ffa500;
+      box-shadow: 0 2px 10px rgba(255, 165, 0, 0.2);
+      line-height: 1.4;
+      height: 100%;
+      display: flex;
+      align-items: center;
+    }
+    .tooltip::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      right: -8px;
+      transform: translateY(-50%);
+      border-left: 8px solid #ffa500;
+      border-top: 8px solid transparent;
+      border-bottom: 8px solid transparent;
+    }
+    .plan:hover .tooltip {
+      opacity: 1;
+      visibility: visible;
+    }
+    .carousel-controls {
+      display: none;
+    }
+    .email-capture {
+      position: fixed;
+      top: 35%;
+      left: 6rem;
+      text-align: left;
+      animation: fadeInUp 1s ease-out;
+      z-index: 1000000;
+      width: 400px;
+    }
+    .email-capture p {
+      margin-bottom: 1.5rem;
+      font-size: 1rem;
+      color: #ffffff;
+    }
+    .email-capture form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      align-items: flex-start;
+    }
+    input[type="email"] {
+      padding: 0.5rem;
+      font-size: 1rem;
+      border-radius: 5px;
+      border: 1px solid #ffa500;
+      width: 250px;
+      background: transparent;
+      color: #ffffff;
+    }
+    input[type="email"]::placeholder {
+      color: #ffffff80;
+    }
+    button[type="submit"] {
+      padding: 0.425rem 0.85rem;
+      background: transparent;
+      color: white;
+      border: 1px solid #ffa500;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: background-color 0.3s ease;
+    }
+    button[type="submit"]:hover {
+      background-color: rgba(255, 165, 0, 0.2);
+    }
+    #adsense {
+      width: 400px;
+      height: 50px;
+      background: #111;
+      position: fixed;
+      bottom: 3.5rem;
+      left: 6rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #666;
+      font-size: 0.9rem;
+      border: 1px dashed #333;
+      z-index: 1000000;
+    }
+    .footer {
+      font-size: 0.8rem;
+      margin-top: 1rem;
+      color: #aaa;
+      text-align: left;
+      position: fixed;
+      bottom: 1.5rem;
+      left: 6rem;
+      z-index: 1000000;
+      width: 400px;
+    }
+    .footer a {
+      color: #aaa;
+      text-decoration: none;
+      margin: 0 0.5rem;
+    }
+    .footer a:hover {
+      text-decoration: underline;
+    }
+    @keyframes fadeInUp {
+      from {opacity: 0; transform: translateY(10px);}
+      to {opacity: 1; transform: translateY(0);}
+    }
+    @media (max-width: 768px) {
+      .plans {
+        right: 1rem;
+      }
+      .plan {
+        min-width: 200px;
+      }
+      #adsense {
+        width: 300px;
+        left: 5rem;
+        bottom: 3rem;
+      }
+      .footer {
+        width: 300px;
+        left: 5rem;
+        bottom: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <video id="bg-video" autoplay muted loop playsinline onerror="this.onerror=null; this.src='Untitled.mp4';">
+    <source src="background.webm" type="video/webm" onerror="this.onerror=null; this.src='Untitled.mp4';">
+    <source src="Untitled.mp4" type="video/mp4">
+  </video>
+  
+  <div class="content-wrapper">
+    <h1><span class="title-powercore">PowerCore</span><span class="title-ai">Ai</span></h1>
+    <div class="subheader">Stack smarter. Move faster.</div>
+    <div class="quote" id="quoteBox">"Build shovels, not mines."</div>
+
+    <div class="plans" id="planCarousel">
+      <a class="plan" href="#"><div>Founder's Bundle<div class="tooltip">🚀 Ultimate power user package with lifetime access to all current and future tools. Includes priority support, custom integrations, and exclusive beta features. Perfect for serious developers and teams.</div></div></a>
+      <a class="plan" href="#"><div>All Access Dev Vault<div class="tooltip">⚡️ Get early access to beta features and exclusive development tools. Includes advanced analytics, custom workflows, and priority feature requests. Stay ahead of the curve.</div></div></a>
+      <a class="plan" href="#"><div>Workshop Access<div class="tooltip">🎓 Live coding sessions, expert insights, and hands-on tutorials. Weekly workshops, Q&A sessions, and access to our expert community. Learn from the best.</div></div></a>
+      <a class="plan" href="#"><div>Solo Builder Pass<div class="tooltip">💪 Perfect for indie developers with dedicated support and essential tools. Includes basic analytics, community access, and monthly office hours. Build your way.</div></div></a>
+      <a class="plan" href="#"><div>Free Range Dev<div class="tooltip">🌟 Start your journey with our free tier and stay updated with the community. Basic tools, documentation access, and community support. Begin your adventure.</div></div></a>
+    </div>
+
+    <div class="email-capture">
+      <p>Get early access, drops, and dev diaries.</p>
+      <form>
+        <input type="email" placeholder="your@email.com" required />
+        <button type="submit">Notify Me</button>
+      </form>
+    </div>
+
+    <div id="adsense">[ Google AdSense Placeholder ]</div>
+
+    <div class="footer">
+      <a href="#">Privacy Policy</a> |
+      <a href="#">Terms of Service</a> |
+      <a href="#">Cookie Policy</a>
+    </div>
+  </div>
+
+  <script>
+    const quotes = [
+      '"Move fast. Break things."',
+      '"Done is better than perfect."',
+      '"Work smarter, not harder."',
+      '"Speed is a feature."',
+      '"Ship it. Iterate later."',
+      '"Efficiency is doing things right. Effectiveness is doing the right things."',
+      '"The best code is no code at all."',
+      '"Automate everything."',
+      '"Time is your most valuable asset."',
+      '"Build once, scale infinitely."',
+      '"Focus on the 20% that delivers 80%."',
+      '"Execution beats ideas every time."',
+      '"Ship early, ship often."',
+      '"The best system is the one that works."',
+      '"Optimize for speed, not comfort."',
+      '"Build fast. Scale faster."',
+      '"Efficiency is the enemy of waste."',
+      '"Automate or die."',
+      '"Speed is the ultimate competitive advantage."',
+      '"Done is the engine of more."'
+    ];
+
+    // Fisher-Yates shuffle algorithm
+    function shuffleArray(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    }
+
+    let shuffledQuotes = shuffleArray([...quotes]);
+    let currentQuoteIndex = 0;
+    const quoteBox = document.getElementById('quoteBox');
+
+    function updateQuote() {
+      quoteBox.style.opacity = '0';
+      setTimeout(() => {
+        quoteBox.textContent = shuffledQuotes[currentQuoteIndex];
+        quoteBox.style.opacity = '0.9';
+        currentQuoteIndex = (currentQuoteIndex + 1) % shuffledQuotes.length;
+        
+        // Reshuffle when we've shown all quotes
+        if (currentQuoteIndex === 0) {
+          shuffledQuotes = shuffleArray([...quotes]);
+        }
+      }, 500);
+    }
+
+    // Update quote every 10 seconds
+    setInterval(updateQuote, 10000);
+    // Initial quote update
+    updateQuote();
+
+    // Add error handling for video
+    document.getElementById('bg-video').addEventListener('error', function(e) {
+      console.log('Video error:', e);
+      this.src = 'Untitled.mp4';
+    });
+  </script>
+</body>
+</html>
